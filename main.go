@@ -6,14 +6,14 @@ import (
 	"os"
 	"strings"
 
+	"github.com/ekou123/pokedex/REPL"
 	"github.com/ekou123/pokedex/command_functionality"
-	
 )
+
+
 
 func main() {
 	scanner := bufio.NewScanner(os.Stdin)
-
-	//resp, err := http.Get()
 	
 
 	for {
@@ -27,7 +27,10 @@ func main() {
 			command_functionality.CommandHelp()
 		case "exit":
 			command_functionality.CommandExit()
+		case "map":
+			REPL.GetAPIData("Bruh")
 		}
+		
 
 
 
