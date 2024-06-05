@@ -2,14 +2,13 @@ package REPL
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 )
 
 type Config struct {
-	NextURL     string
-	PreviousURL string
+	NextURL     *string
+	PreviousURL *string
 }
 
 type AreaInfo struct {
@@ -22,17 +21,15 @@ type AreaInfo struct {
 	} `json:"results"`
 }
 
-var InitialURL = "https://pokeapi.co/api/v2/"
 
-func GetAPIData(url string) (AreaInfo, error) {
-	fmt.Println("Deez")
 
-	//fullURL := initialURL + url
 
-	fullURL := "https://pokeapi.co/api/v2/location-area/"
+
+func GetAPIData(url *string) (AreaInfo, error) {
+
 	//client := http.Client{Timeout: time.Duration(1) * time.Second}
 
-	 resp, err := http.Get(fullURL)
+	 resp, err := http.Get(*url)
 	 if err != nil {
 		return AreaInfo{}, err
 	 }
@@ -47,5 +44,7 @@ func GetAPIData(url string) (AreaInfo, error) {
 
 	 json.Unmarshal(body, &programmableBody)
 
-	 return programmableBody, nil
+	 return programmableBody, nil 	
 }
+
+

@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/ekou123/pokedex/REPL"
 	"github.com/ekou123/pokedex/command_functionality"
 )
 
@@ -28,7 +26,7 @@ func main() {
 		case "exit":
 			command_functionality.CommandExit()
 		case "map":
-			REPL.GetAPIData("Bruh")
+			command_functionality.CommandMap()
 		}
 		
 

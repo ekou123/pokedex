@@ -1,9 +1,6 @@
 package command_functionality
 
-import (
-    "os"
-    "fmt"
-)
+
 
 type CliCommand struct {
 	Name        string
@@ -32,17 +29,5 @@ func GetCliCommands() map[string]CliCommand{
 
 }
 
-func CommandExit() {
-	os.Exit(0)
-}
 
-func CommandHelp() {
-    cliCommands := GetCliCommands()
 
-    fmt.Println("\nAVAILABLE COMMANDS:")
-
-    for _, cliCommand := range cliCommands {
-        fmt.Println(cliCommand.Name + ": " + cliCommand.Description)
-    }
-    fmt.Println()
-}
