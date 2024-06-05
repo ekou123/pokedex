@@ -43,3 +43,20 @@ func CommandMap() {
 
 
 }
+
+func CommandMapB() {
+	if config.PreviousURL == nil {
+		return
+	}
+	programmableBody, _ := REPL.GetAPIData(config.PreviousURL)
+	
+	config.NextURL = &programmableBody.Next
+	config.PreviousURL = &programmableBody.Previous
+
+	for _, name := range programmableBody.Results {
+		fmt.Println(name.Name)
+
+	}
+
+
+}

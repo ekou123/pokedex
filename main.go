@@ -27,6 +27,8 @@ func main() {
 			command_functionality.CommandExit()
 		case "map":
 			command_functionality.CommandMap()
+		case "mapb":
+			command_functionality.CommandMapB()
 		}
 		
 
