@@ -31,6 +31,9 @@ func CommandHelp() {
 
 
 func CommandMap() {
+	if *config.NextURL == "" {
+		*config.PreviousURL = *config.NextURL
+	}
 	programmableBody, _ := REPL.GetAPIData(config.NextURL)
 	
 	config.NextURL = &programmableBody.Next
@@ -45,9 +48,12 @@ func CommandMap() {
 }
 
 func CommandMapB() {
-	if config.PreviousURL == nil {
-		return
+	if *config.PreviousURL == "" {
+		*config.NextURL = initialURL
 	}
+	
+
+	fmt.Println(*config.PreviousURL)
 	programmableBody, _ := REPL.GetAPIData(config.PreviousURL)
 	
 	config.NextURL = &programmableBody.Next
