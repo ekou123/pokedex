@@ -2,16 +2,13 @@ package main
 
 import (
 	"bufio"
-	"example.com/pokedex/commands"
-	"fmt"
+	"github.com/ekou123"
 	"os"
 	"strings"
 )
 
 func main() {
 	fmt.Println("Hello World")
-
-	command := commands.CommandList()
 
 	fmt.Println(command)
 
