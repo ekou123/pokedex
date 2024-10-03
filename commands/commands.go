@@ -8,7 +8,7 @@ import (
 type CliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config, ...string) error
+	Callback    func(*Config, string) error
 }
 
 func CommandList() map[string]CliCommand {
@@ -33,15 +33,20 @@ func CommandList() map[string]CliCommand {
 			Description: "Displays previous 20 locations",
 			Callback:    CommandMapB,
 		},
+		"explore": {
+			Name:        "explore",
+			Description: "Explores a specific zone in an area, revealing the pokemon found there",
+			Callback:    CommandExplore,
+		},
 	}
 }
 
-func CommandExit(cfg *Config, args ...string) error {
+func CommandExit(cfg *Config, args string) error {
 	os.Exit(1)
 	return nil
 }
 
-func CommandHelp(cfg *Config, args ...string) error {
+func CommandHelp(cfg *Config, args string) error {
 	commands := CommandList()
 	for _, command := range commands {
 
@@ -50,7 +55,7 @@ func CommandHelp(cfg *Config, args ...string) error {
 	return nil
 }
 
-func CommandMap(cfg *Config, args ...string) error {
+func CommandMap(cfg *Config, args string) error {
 
 	locationsResp, err := ListLocations(cfg.NextURL)
 
@@ -67,7 +72,7 @@ func CommandMap(cfg *Config, args ...string) error {
 	return nil
 }
 
-func CommandMapB(cfg *Config, args ...string) error {
+func CommandMapB(cfg *Config, args string) error {
 	if cfg.PreviousURL == nil {
 
 		return fmt.Errorf("cannot go back any farther")
@@ -87,7 +92,33 @@ func CommandMapB(cfg *Config, args ...string) error {
 
 }
 
-func CommandExplore(cfg *Config, args ...string) error {
+func CommandExplore(cfg *Config, userRequest string) error {
+
+	if userRequest == "" {
+		fmt.Println("Please provide further information on what you would like to explore")
+	}
+	locationData, err := GetLocationData(cfg.currentURL)
+	if err != nil {
+		return err
+	}
+
+	areaURL, ok := CheckIfCanExplore(locationData, userRequest)
+	if !ok {
+		fmt.Println("Please provide a valid area or location")
+		return nil
+	}
+
+	locationArea, err := GetExploreData(&areaURL)
+	if err != nil {
+		return err
+	}
+
+	fmt.Println("Exploring " + locationArea.Name + "...")
+	fmt.Println("Found pokemon: ")
+
+	for _, pokemon := range locationArea.PokemonEncounters {
+		fmt.Println(pokemon.Pokemon.Name)
+	}
 
 	return nil
 }

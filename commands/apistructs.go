@@ -1,4 +1,4 @@
-package main
+package commands
 
 type PokemonArea struct {
 	EncounterMethodRates []struct {

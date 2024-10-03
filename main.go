@@ -33,12 +33,17 @@ func startRepl(cfg *commands.Config) {
 			continue
 		}
 
+		var commandRequest string
+		if len(words) >= 2 {
+			commandRequest = words[1]
+		}
+
 		commandName := words[0]
 
 		command, exists := commands.CommandList()[commandName]
 
 		if exists {
-			err := command.Callback(cfg, commandName)
+			err := command.Callback(cfg, commandRequest)
 			if err != nil {
 				return
 			}
