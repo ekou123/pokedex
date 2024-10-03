@@ -1,3 +1,3 @@
-module github.com/ekou123/pokedex/commands
+module example.com/pokedex/commands
 
-go 1.18
+go 1.23.1
