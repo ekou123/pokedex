@@ -28,6 +28,11 @@ func CommandList() map[string]CliCommand {
 			Description: "Displays next 20 locations",
 			Callback:    CommandMap,
 		},
+		"mapb": {
+			Name:        "mapb",
+			Description: "Displays previous 20 locations",
+			Callback:    CommandMapB,
+		},
 	}
 }
 
@@ -62,18 +67,22 @@ func CommandMap(cfg *Config) error {
 	return nil
 }
 
-func CommandMapB(cfg *Config) {
+func CommandMapB(cfg *Config) error {
 	if cfg.PreviousURL == nil {
-		*cfg.currentURL = baseURL + "location-area?offset=20&limit=20"
-		currentLocations, _ := ListLocations(cfg.currentURL)
-		cfg.NextURL = currentLocations.Next
+
+		return fmt.Errorf("Cannot go back any farther")
 	}
 
 	cfg.currentURL = cfg.PreviousURL
 
-	location, _ := ListLocations(cfg.PreviousURL)
+	location, err := ListLocations(cfg.PreviousURL)
+	if err != nil {
+		return err
+	}
 
 	cfg.NextURL = location.Next
 	cfg.PreviousURL = location.Previous
+
+	return nil
 
 }
