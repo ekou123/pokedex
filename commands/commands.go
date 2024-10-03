@@ -8,7 +8,7 @@ import (
 type CliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config) error
+	Callback    func(*Config, ...string) error
 }
 
 func CommandList() map[string]CliCommand {
@@ -36,12 +36,12 @@ func CommandList() map[string]CliCommand {
 	}
 }
 
-func CommandExit(cfg *Config) error {
+func CommandExit(cfg *Config, args ...string) error {
 	os.Exit(1)
 	return nil
 }
 
-func CommandHelp(cfg *Config) error {
+func CommandHelp(cfg *Config, args ...string) error {
 	commands := CommandList()
 	for _, command := range commands {
 
@@ -50,7 +50,7 @@ func CommandHelp(cfg *Config) error {
 	return nil
 }
 
-func CommandMap(cfg *Config) error {
+func CommandMap(cfg *Config, args ...string) error {
 
 	locationsResp, err := ListLocations(cfg.NextURL)
 
@@ -67,10 +67,10 @@ func CommandMap(cfg *Config) error {
 	return nil
 }
 
-func CommandMapB(cfg *Config) error {
+func CommandMapB(cfg *Config, args ...string) error {
 	if cfg.PreviousURL == nil {
 
-		return fmt.Errorf("Cannot go back any farther")
+		return fmt.Errorf("cannot go back any farther")
 	}
 
 	cfg.currentURL = cfg.PreviousURL
@@ -85,4 +85,9 @@ func CommandMapB(cfg *Config) error {
 
 	return nil
 
+}
+
+func CommandExplore(cfg *Config, args ...string) error {
+
+	return nil
 }

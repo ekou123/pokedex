@@ -36,8 +36,12 @@ func startRepl(cfg *commands.Config) {
 		commandName := words[0]
 
 		command, exists := commands.CommandList()[commandName]
+
 		if exists {
-			command.Callback(cfg)
+			err := command.Callback(cfg, commandName)
+			if err != nil {
+				return
+			}
 			continue
 		} else {
 			fmt.Println("Unknown command")
