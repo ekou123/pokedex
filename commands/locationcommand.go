@@ -19,8 +19,14 @@ type MapLocation struct {
 
 const baseURL = "https://pokeapi.co/api/v2/"
 
-func ListLocations(locationURL *string) (MapLocation, error) {
-	res, err := http.Get(*locationURL)
+func ListLocations(pageURL *string) (MapLocation, error) {
+	url := baseURL + "/location-area"
+
+	if pageURL != nil {
+		url = *pageURL
+	}
+
+	res, err := http.Get(url)
 	if err != nil {
 		return MapLocation{}, err
 	}
@@ -36,7 +42,7 @@ func ListLocations(locationURL *string) (MapLocation, error) {
 	var location MapLocation
 	err = json.Unmarshal(data, &location)
 	if err != nil {
-		return MapLocation{}, fmt.Errorf("Unable to unmarshal")
+		return MapLocation{}, fmt.Errorf("unable to unmarshal")
 	}
 
 	for _, location := range location.Results {

@@ -8,7 +8,7 @@ import (
 type CliCommand struct {
 	Name        string
 	Description string
-	Callback    func(*Config)
+	Callback    func(*Config) error
 }
 
 func CommandList() map[string]CliCommand {
@@ -31,38 +31,47 @@ func CommandList() map[string]CliCommand {
 	}
 }
 
-func CommandExit(cfg *Config) {
+func CommandExit(cfg *Config) error {
 	os.Exit(1)
+	return nil
 }
 
-func CommandHelp(cfg *Config) {
+func CommandHelp(cfg *Config) error {
 	commands := CommandList()
 	for _, command := range commands {
 
 		fmt.Printf("%s: \t %s \n", command.Name, command.Description)
 	}
+	return nil
 }
 
-func CommandMap(cfg *Config) {
-	if cfg.NextURL == nil {
-		fmt.Println("Cannot continue further soz")
+func CommandMap(cfg *Config) error {
+
+	locationsResp, err := ListLocations(cfg.NextURL)
+
+	if err != nil {
+		return err
 	}
 
-	location := ListLocations(cfg.NextURL)
-	cfg.NextURL = location.Next
-	cfg.PreviousURL = cfg.NextURL
+	cfg.NextURL = locationsResp.Next
+	cfg.PreviousURL = locationsResp.Previous
+
+	for _, loc := range locationsResp.Results {
+		fmt.Println(loc.Name)
+	}
+	return nil
 }
 
 func CommandMapB(cfg *Config) {
 	if cfg.PreviousURL == nil {
 		*cfg.currentURL = baseURL + "location-area?offset=20&limit=20"
-		cfg.NextURL = ListLocations(cfg.currentURL).Next
-		return
+		currentLocations, _ := ListLocations(cfg.currentURL)
+		cfg.NextURL = currentLocations.Next
 	}
 
 	cfg.currentURL = cfg.PreviousURL
 
-	location := ListLocations(cfg.PreviousURL)
+	location, _ := ListLocations(cfg.PreviousURL)
 
 	cfg.NextURL = location.Next
 	cfg.PreviousURL = location.Previous
